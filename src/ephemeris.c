@@ -396,6 +396,7 @@ static eph_t *seleph(gtime_t time, int sat, int iode, const nav_t *nav)
     }
     return nav->eph+j;
 }
+#ifdef ENAGLO
 /* select glonass ephememeris ------------------------------------------------*/
 static geph_t *selgeph(gtime_t time, int sat, int iode, const nav_t *nav)
 {
@@ -418,6 +419,7 @@ static geph_t *selgeph(gtime_t time, int sat, int iode, const nav_t *nav)
     }
     return nav->geph+j;
 }
+#endif
 /* select sbas ephememeris ---------------------------------------------------*/
 static seph_t *selseph(gtime_t time, int sat, const nav_t *nav)
 {
@@ -454,10 +456,12 @@ static int ephclk(gtime_t time, gtime_t teph, int sat, const nav_t *nav,
         if (!(eph=seleph(teph,sat,-1,nav))) return 0;
         *dts=eph2clk(time,eph);
     }
+#ifdef ENAGLO
     else if (sys==SYS_GLO) {
         if (!(geph=selgeph(teph,sat,-1,nav))) return 0;
         *dts=geph2clk(time,geph);
     }
+#endif
     else if (sys==SYS_SBS) {
         if (!(seph=selseph(teph,sat,nav))) return 0;
         *dts=seph2clk(time,seph);
@@ -490,6 +494,7 @@ static int ephpos(gtime_t time, gtime_t teph, int sat, const nav_t *nav,
         eph2pos(time,eph,rst,dtst,var);
         *svh=eph->svh;
     }
+#ifdef ENAGLO
     else if (sys==SYS_GLO) {
         if (!(geph=selgeph(teph,sat,iode,nav))) return 0;
         geph2pos(time,geph,rs,dts,var);
@@ -497,6 +502,7 @@ static int ephpos(gtime_t time, gtime_t teph, int sat, const nav_t *nav,
         geph2pos(time,geph,rst,dtst,var);
         *svh=geph->svh;
     }
+#endif
     else if (sys==SYS_SBS) {
         if (!(seph=selseph(teph,sat,nav))) return 0;
         

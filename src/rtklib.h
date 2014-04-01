@@ -776,7 +776,9 @@ typedef struct {        /* QZSS LEX ionosphere correction type */
 
 typedef struct {        /* navigation data type */
     int n,nmax;         /* number of broadcast ephemeris */
+#ifdef ENAGLO
     int ng,ngmax;       /* number of glonass ephemeris */
+#endif
     int ns,nsmax;       /* number of sbas ephemeris */
     int ne,nemax;       /* number of precise ephemeris */
     int nc,ncmax;       /* number of precise clock */
@@ -784,7 +786,9 @@ typedef struct {        /* navigation data type */
     int nt,ntmax;       /* number of tec grid data */
     int nn,nnmax;       /* number of stec grid data */
     eph_t *eph;         /* GPS/QZS/GAL ephemeris */
+#ifdef ENAGLO
     geph_t *geph;       /* GLONASS ephemeris */
+#endif
     seph_t *seph;       /* SBAS ephemeris */
     peph_t *peph;       /* precise ephemeris */
     pclk_t *pclk;       /* precise clock */
@@ -793,21 +797,37 @@ typedef struct {        /* navigation data type */
     stec_t *stec;       /* stec grid data */
     erp_t  erp;         /* earth rotation parameters */
     double utc_gps[4];  /* GPS delta-UTC parameters {A0,A1,T,W} */
+#ifdef ENAGLO
     double utc_glo[4];  /* GLONASS UTC GPS time parameters */
+#endif
+#ifdef ENAGAL
     double utc_gal[4];  /* Galileo UTC GPS time parameters */
+#endif
+#ifdef ENAQZS
     double utc_qzs[4];  /* QZS UTC GPS time parameters */
+#endif
+#ifdef ENACMP
     double utc_cmp[4];  /* BeiDou UTC parameters */
+#endif
     double utc_sbs[4];  /* SBAS UTC parameters */
     double ion_gps[8];  /* GPS iono model parameters {a0,a1,a2,a3,b0,b1,b2,b3} */
+#ifdef ENAGAL
     double ion_gal[4];  /* Galileo iono model parameters {ai0,ai1,ai2,0} */
+#endif
+#ifdef ENAQZS
     double ion_qzs[8];  /* QZSS iono model parameters {a0,a1,a2,a3,b0,b1,b2,b3} */
+#endif
+#ifdef ENACMP
     double ion_cmp[8];  /* BeiDou iono model parameters {a0,a1,a2,a3,b0,b1,b2,b3} */
+#endif
     int leaps;          /* leap seconds (s) */
     double lam[MAXSAT][NFREQ]; /* carrier wave lengths (m) */
     double cbias[MAXSAT][3];   /* code bias (0:p1-p2,1:p1-c1,2:p2-c2) (m) */
     double wlbias[MAXSAT];     /* wide-lane bias (cycle) */
+#ifdef ENAGLO
     double glo_cpbias[4];    /* glonass code-phase bias {1C,1P,2C,2P} (m) */
     char glo_fcn[MAXPRNGLO+1]; /* glonass frequency channel number + 8 */
+#endif
     pcv_t pcvs[MAXSAT]; /* satellite antenna pcv */
     sbssat_t sbssat;    /* SBAS satellite corrections */
     sbsion_t sbsion[MAXBAND+1]; /* SBAS ionosphere corrections */

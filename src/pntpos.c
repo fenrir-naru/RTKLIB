@@ -143,12 +143,14 @@ extern int ionocorr(gtime_t time, const nav_t *nav, int sat, const double *pos,
     if (ionoopt==IONOOPT_TEC) {
         return iontec(time,nav,pos,azel,1,ion,var);
     }
+#ifdef ENAQZS
     /* qzss broadcast model */
     if (ionoopt==IONOOPT_QZS&&norm(nav->ion_qzs,8)>0.0) {
         *ion=ionmodel(time,nav->ion_qzs,pos,azel);
         *var=SQR(*ion*ERR_BRDCI);
         return 1;
     }
+#endif
     /* lex ionosphere model */
     if (ionoopt==IONOOPT_LEX) {
 #ifdef ENAQZS

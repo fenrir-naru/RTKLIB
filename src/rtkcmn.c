@@ -2380,6 +2380,7 @@ static void uniqeph(nav_t *nav)
     
     trace(4,"uniqeph: n=%d\n",nav->n);
 }
+#ifdef ENAGLO
 /* compare glonass ephemeris -------------------------------------------------*/
 static int cmpgeph(const void *p1, const void *p2)
 {
@@ -2411,6 +2412,7 @@ static void uniqgeph(nav_t *nav)
     
     trace(4,"uniqgeph: ng=%d\n",nav->ng);
 }
+#endif
 /* compare sbas ephemeris ----------------------------------------------------*/
 static int cmpseph(const void *p1, const void *p2)
 {
@@ -2449,12 +2451,18 @@ static void uniqseph(nav_t *nav)
 extern void uniqnav(nav_t *nav)
 {
     int i,j;
-    
+
+#ifdef ENAGLO
     trace(3,"uniqnav: neph=%d ngeph=%d nseph=%d\n",nav->n,nav->ng,nav->ns);
+#else
+    trace(3,"uniqnav: neph=%d ngeph=0 nseph=%d\n",nav->n,nav->ns);
+#endif
     
     /* unique ephemeris */
     uniqeph (nav);
+#ifdef ENAGLO
     uniqgeph(nav);
+#endif
     uniqseph(nav);
     
     /* update carrier wave length */
@@ -2627,7 +2635,9 @@ extern void freeobs(obs_t *obs)
 extern void freenav(nav_t *nav, int opt)
 {
     if (opt&0x01) {free(nav->eph ); nav->eph =NULL; nav->n =nav->nmax =0;}
+#ifdef ENAGLO
     if (opt&0x02) {free(nav->geph); nav->geph=NULL; nav->ng=nav->ngmax=0;}
+#endif
     if (opt&0x04) {free(nav->seph); nav->seph=NULL; nav->ns=nav->nsmax=0;}
     if (opt&0x08) {free(nav->peph); nav->peph=NULL; nav->ne=nav->nemax=0;}
     if (opt&0x10) {free(nav->pclk); nav->pclk=NULL; nav->nc=nav->ncmax=0;}
@@ -2733,9 +2743,12 @@ extern void tracenav(int level, const nav_t *nav)
             nav->ion_gps[1],nav->ion_gps[2],nav->ion_gps[3]);
     trace_printf("(ion) %9.4e %9.4e %9.4e %9.4e\n",nav->ion_gps[4],
             nav->ion_gps[5],nav->ion_gps[6],nav->ion_gps[7]);
+#ifdef ENAGAL
     trace_printf("(ion) %9.4e %9.4e %9.4e %9.4e\n",nav->ion_gal[0],
             nav->ion_gal[1],nav->ion_gal[2],nav->ion_gal[3]);
+#endif
 }
+#ifdef ENAGLO
 extern void tracegnav(int level, const nav_t *nav)
 {
     char s1[64],s2[64],id[16];
@@ -2750,6 +2763,7 @@ extern void tracegnav(int level, const nav_t *nav)
                 id,s1,s2,nav->geph[i].frq,nav->geph[i].svh,nav->geph[i].taun*1E6);
     }
 }
+#endif
 extern void tracehnav(int level, const nav_t *nav)
 {
     char s1[64],s2[64],id[16];
@@ -3095,26 +3109,33 @@ extern double satwavelen(int sat, int frq, const nav_t *nav)
     const double dfrq_glo[]={DFRQ1_GLO,DFRQ2_GLO,0.0};
     int i,sys=satsys(sat,NULL);
     
-    if (sys==SYS_GLO) {
-        if (0<=frq&&frq<=2) {
-            for (i=0;i<nav->ng;i++) {
-                if (nav->geph[i].sat!=sat) continue;
-                return CLIGHT/(freq_glo[frq]+dfrq_glo[frq]*nav->geph[i].frq);
+    switch(sys){
+#ifdef ENAGLO
+        case SYS_GLO: {
+            if (0<=frq&&frq<=2) {
+                for (i=0;i<nav->ng;i++) {
+                    if (nav->geph[i].sat!=sat) continue;
+                    return CLIGHT/(freq_glo[frq]+dfrq_glo[frq]*nav->geph[i].frq);
+                }
             }
+            break;
         }
-    }
-    else if (sys==SYS_CMP) {
-        if      (frq==1) return CLIGHT/FREQ2_CMP; /* B1 */
-        else if (frq==3) return CLIGHT/FREQ6_CMP; /* B3 */
-        else if (frq==4) return CLIGHT/FREQ7_CMP; /* B2 */
-    }
-    else {
-        if      (frq==0) return CLIGHT/FREQ1; /* L1/E1 */
-        else if (frq==1) return CLIGHT/FREQ2; /* L2 */
-        else if (frq==2) return CLIGHT/FREQ5; /* L5/E5a */
-        else if (frq==3) return CLIGHT/FREQ6; /* L6/LEX */
-        else if (frq==4) return CLIGHT/FREQ7; /* E5b */
-        else if (frq==5) return CLIGHT/FREQ8; /* E5a+b */
+#endif
+        case SYS_CMP: {
+            if      (frq==1) return CLIGHT/FREQ2_CMP; /* B1 */
+            else if (frq==3) return CLIGHT/FREQ6_CMP; /* B3 */
+            else if (frq==4) return CLIGHT/FREQ7_CMP; /* B2 */
+            break;
+        }
+        default: {
+            if      (frq==0) return CLIGHT/FREQ1; /* L1/E1 */
+            else if (frq==1) return CLIGHT/FREQ2; /* L2 */
+            else if (frq==2) return CLIGHT/FREQ5; /* L5/E5a */
+            else if (frq==3) return CLIGHT/FREQ6; /* L6/LEX */
+            else if (frq==4) return CLIGHT/FREQ7; /* E5b */
+            else if (frq==5) return CLIGHT/FREQ8; /* E5a+b */
+            break;
+        }
     }
     return 0.0;
 }

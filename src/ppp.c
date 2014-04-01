@@ -504,9 +504,11 @@ static int ifmeas(const obsd_t *obs, const nav_t *nav, const double *azel,
     P2=obs->P[j];
     P1_C1=nav->cbias[obs->sat-1][1];
     P2_C2=nav->cbias[obs->sat-1][2];
+#ifdef EXTLEX
     if (opt->sateph==EPHOPT_LEX) {
         P1_C1=nav->lexeph[obs->sat-1].isc[0]*CLIGHT; /* ISC_L1C/A */
     }
+#endif
     if (L1==0.0||L2==0.0||P1==0.0||P2==0.0) return 0;
     
     /* iono-free phase with windup correction */

@@ -537,6 +537,7 @@ extern int rtksvrinit(rtksvr_t *svr)
     svr->nav.ns=NSATSBS*2;
     
     if(!(svr->nav.pcvs = (pcv_t *)malloc(sizeof(pcv_t) * MAXSAT))
+        || !(svr->nav.sbssat = (sbssat_t *)malloc(sizeof(sbssat_t)))
         || !(svr->nav.sbsion = (sbsion_t *)malloc(sizeof(sbsion_t) * (MAXBAND+1)))
         || !(svr->nav.dgps = (dgps_t *)malloc(sizeof(dgps_t) * MAXSAT))
         || !(svr->nav.ssr = (ssr_t *)malloc(sizeof(ssr_t) * MAXSAT))){

@@ -529,11 +529,11 @@ static int satpos_sbas(gtime_t time, gtime_t teph, int sat, const nav_t *nav,
     trace(4,"satpos_sbas: time=%s sat=%2d\n",time_str(time,3),sat);
     
     /* search sbas satellite correciton */
-    for (i=0;i<nav->sbssat.nsat;i++) {
-        sbs=nav->sbssat.sat+i;
+    for (i=0;i<nav->sbssat->nsat;i++) {
+        sbs=nav->sbssat->sat+i;
         if (sbs->sat==sat) break;
     }
-    if (i>=nav->sbssat.nsat) {
+    if (i>=nav->sbssat->nsat) {
         trace(2,"no sbas correction for orbit: %s sat=%2d\n",time_str(time,0),sat);
         ephpos(time,teph,sat,nav,-1,rs,dts,var,svh);
         *svh=-1;

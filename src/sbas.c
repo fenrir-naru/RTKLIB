@@ -430,18 +430,18 @@ extern int sbsupdatecorr(const sbsmsg_t *msg, nav_t *nav)
     if (msg->week==0) return -1;
     
     switch (type) {
-        case  0: stat=decode_sbstype2 (msg,&nav->sbssat); break;
-        case  1: stat=decode_sbstype1 (msg,&nav->sbssat); break;
+        case  0: stat=decode_sbstype2 (msg,nav->sbssat); break;
+        case  1: stat=decode_sbstype1 (msg,nav->sbssat); break;
         case  2:
         case  3:
         case  4:
-        case  5: stat=decode_sbstype2 (msg,&nav->sbssat); break;
-        case  6: stat=decode_sbstype6 (msg,&nav->sbssat); break;
-        case  7: stat=decode_sbstype7 (msg,&nav->sbssat); break;
+        case  5: stat=decode_sbstype2 (msg,nav->sbssat); break;
+        case  6: stat=decode_sbstype6 (msg,nav->sbssat); break;
+        case  7: stat=decode_sbstype7 (msg,nav->sbssat); break;
         case  9: stat=decode_sbstype9 (msg,nav);          break;
         case 18: stat=decode_sbstype18(msg,nav ->sbsion); break;
-        case 24: stat=decode_sbstype24(msg,&nav->sbssat); break;
-        case 25: stat=decode_sbstype25(msg,&nav->sbssat); break;
+        case 24: stat=decode_sbstype24(msg,nav->sbssat); break;
+        case 25: stat=decode_sbstype25(msg,nav->sbssat); break;
         case 26: stat=decode_sbstype26(msg,nav ->sbsion); break;
         case 63: break; /* null message */
         
@@ -872,11 +872,11 @@ extern int sbssatcorr(gtime_t time, int sat, const nav_t *nav, double *rs,
     trace(3,"sbssatcorr : sat=%2d\n",sat);
     
     /* sbas long term corrections */
-    if (!sbslongcorr(time,sat,&nav->sbssat,drs,&dclk)) {
+    if (!sbslongcorr(time,sat,nav->sbssat,drs,&dclk)) {
         return 0;
     }
     /* sbas fast corrections */
-    if (!sbsfastcorr(time,sat,&nav->sbssat,&prc,var)) {
+    if (!sbsfastcorr(time,sat,nav->sbssat,&prc,var)) {
         return 0;
     }
     for (i=0;i<3;i++) rs[i]+=drs[i];

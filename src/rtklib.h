@@ -829,7 +829,7 @@ typedef struct {        /* navigation data type */
     char glo_fcn[MAXPRNGLO+1]; /* glonass frequency channel number + 8 */
 #endif
     pcv_t *pcvs; /* satellite antenna pcv, require [MAXSAT] */
-    sbssat_t sbssat;    /* SBAS satellite corrections */
+    sbssat_t *sbssat;    /* SBAS satellite corrections */
     sbsion_t *sbsion; /* SBAS ionosphere corrections, require [MAXBAND+1] */
     dgps_t *dgps; /* DGPS corrections, require [MAXSAT] */
     ssr_t *ssr;  /* SSR corrections, require [MAXSAT] */

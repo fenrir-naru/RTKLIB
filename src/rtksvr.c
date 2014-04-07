@@ -536,6 +536,14 @@ extern int rtksvrinit(rtksvr_t *svr)
     svr->nav.ng=NSATGLO*2;
     svr->nav.ns=NSATSBS*2;
     
+    if(!(svr->nav.pcvs = (pcv_t *)malloc(sizeof(pcv_t) * MAXSAT))
+        || !(svr->nav.sbsion = (sbsion_t *)malloc(sizeof(sbsion_t) * (MAXBAND+1)))
+        || !(svr->nav.dgps = (dgps_t *)malloc(sizeof(dgps_t) * MAXSAT))
+        || !(svr->nav.ssr = (ssr_t *)malloc(sizeof(ssr_t) * MAXSAT))){
+      tracet(1,"rtksvrinit: malloc error\n");
+      return 0;
+    }
+
     for (i=0;i<3;i++) for (j=0;j<MAXOBSBUF;j++) {
         if (!(svr->obs[i][j].data=(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS))) {
             tracet(1,"rtksvrinit: malloc error\n");

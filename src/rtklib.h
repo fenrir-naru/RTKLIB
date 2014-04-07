@@ -828,11 +828,11 @@ typedef struct {        /* navigation data type */
     double glo_cpbias[4];    /* glonass code-phase bias {1C,1P,2C,2P} (m) */
     char glo_fcn[MAXPRNGLO+1]; /* glonass frequency channel number + 8 */
 #endif
-    pcv_t pcvs[MAXSAT]; /* satellite antenna pcv */
+    pcv_t *pcvs; /* satellite antenna pcv, require [MAXSAT] */
     sbssat_t sbssat;    /* SBAS satellite corrections */
-    sbsion_t sbsion[MAXBAND+1]; /* SBAS ionosphere corrections */
-    dgps_t dgps[MAXSAT]; /* DGPS corrections */
-    ssr_t ssr[MAXSAT];  /* SSR corrections */
+    sbsion_t *sbsion; /* SBAS ionosphere corrections, require [MAXBAND+1] */
+    dgps_t *dgps; /* DGPS corrections, require [MAXSAT] */
+    ssr_t *ssr;  /* SSR corrections, require [MAXSAT] */
 #ifdef EXTLEX
     lexeph_t lexeph[MAXSAT]; /* LEX ephemeris */
     lexion_t lexion;    /* LEX ionosphere correction */

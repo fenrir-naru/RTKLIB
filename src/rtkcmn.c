@@ -173,13 +173,6 @@ const prcopt_t prcopt_default={ /* defaults processing options */
     {"",""},                    /* anttype */
     {{0}},{{0}},{0}             /* antdel,pcv,exsats */
 };
-const solopt_t solopt_default={ /* defaults solution output options */
-    SOLF_LLH,TIMES_GPST,1,3,    /* posf,times,timef,timeu */
-    0,1,0,0,0,0,                /* degf,outhead,outopt,datum,height,geoid */
-    0,0,0,                      /* solstatic,sstat,trace */
-    {0.0,0.0},                  /* nmeaintv */
-    " ",""                      /* separator/program name */
-};
 #ifndef WITHOUT_FILE
 const char *formatstrs[]={      /* stream format strings */
     "RTCM 2",                   /*  0 */

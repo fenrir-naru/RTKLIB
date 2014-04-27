@@ -180,6 +180,7 @@ const solopt_t solopt_default={ /* defaults solution output options */
     {0.0,0.0},                  /* nmeaintv */
     " ",""                      /* separator/program name */
 };
+#ifndef WITHOUT_FILE
 const char *formatstrs[]={      /* stream format strings */
     "RTCM 2",                   /*  0 */
     "RTCM 3",                   /*  1 */
@@ -202,6 +203,7 @@ const char *formatstrs[]={      /* stream format strings */
     "NMEA 0183",                /* 18 */
     NULL
 };
+#endif
 static char *obscodes[]={       /* observation code strings */
     
     ""  ,"1C","1P","1W","1Y", "1M","1N","1S","1L","1E", /*  0- 9 */

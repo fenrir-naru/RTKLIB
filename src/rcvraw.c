@@ -330,7 +330,7 @@ extern int init_raw(raw_t *raw)
       switch(satsys(i+1,NULL)){
         case SYS_NONE: continue;
         case SYS_GLO: memcpy(raw->nav.lam[i], lam_glo, sizeof(lam_glo)); break;
-        default: memcpy(raw->nav[i], lam_carr, sizeof(lam_carr)); break;
+        default: memcpy(raw->nav.lam[i], lam_carr, sizeof(raw->nav.lam[i])); break;
       }
     }
     raw->sta.name[0]=raw->sta.marker[0]='\0';

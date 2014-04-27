@@ -400,6 +400,7 @@ static void decode_obsh(FILE *fp, char *buff, double ver, int *tsys,
     else if (strstr(label,"SYS / PCVS APPLIED"  )) ; /* opt ver.3 */
     else if (strstr(label,"SYS / SCALE FACTOR"  )) ; /* opt ver.3 */
     else if (strstr(label,"SYS / PHASE SHIFTS"  )) ; /* ver.3.01 */
+#ifdef ENAGLO
     else if (strstr(label,"GLONASS SLOT / FRQ #")) { /* ver.3.02 */
         if (nav) {
             for (i=0,p=buff+4;i<8;i++,p+=8) {
@@ -418,6 +419,7 @@ static void decode_obsh(FILE *fp, char *buff, double ver, int *tsys,
             }
         }
     }
+#endif
     else if (strstr(label,"LEAP SECONDS"        )) { /* opt */
         if (nav) nav->leaps=(int)str2num(buff,0,6);
     }
@@ -456,21 +458,27 @@ static void decode_navh(char *buff, nav_t *nav)
             else if (!strncmp(buff,"GPSB",4)) {
                 for (i=0,j=5;i<4;i++,j+=12) nav->ion_gps[i+4]=str2num(buff,j,12);
             }
+#ifdef ENAGAL
             else if (!strncmp(buff,"GAL",3)) {
                 for (i=0,j=5;i<4;i++,j+=12) nav->ion_gal[i]=str2num(buff,j,12);
             }
+#endif
+#ifdef ENAQZS
             else if (!strncmp(buff,"QZSA",4)) { /* v.3.02 */
                 for (i=0,j=5;i<4;i++,j+=12) nav->ion_qzs[i]=str2num(buff,j,12);
             }
             else if (!strncmp(buff,"QZSB",4)) { /* v.3.02 */
                 for (i=0,j=5;i<4;i++,j+=12) nav->ion_qzs[i+4]=str2num(buff,j,12);
             }
+#endif
+#ifdef ENACMP
             else if (!strncmp(buff,"BDSA",4)) { /* v.3.02 */
                 for (i=0,j=5;i<4;i++,j+=12) nav->ion_cmp[i]=str2num(buff,j,12);
             }
             else if (!strncmp(buff,"BDSB",4)) { /* v.3.02 */
                 for (i=0,j=5;i<4;i++,j+=12) nav->ion_cmp[i+4]=str2num(buff,j,12);
             }
+#endif
         }
     }
     else if (strstr(label,"TIME SYSTEM CORR"    )) { /* opt ver.3 */
@@ -481,22 +489,29 @@ static void decode_navh(char *buff, nav_t *nav)
                 nav->utc_gps[2]=str2num(buff,38, 7);
                 nav->utc_gps[3]=str2num(buff,45, 5);
             }
+#ifdef ENAGLO
             else if (!strncmp(buff,"GLUT",4)) {
                 nav->utc_glo[0]=str2num(buff, 5,17);
                 nav->utc_glo[1]=str2num(buff,22,16);
             }
+#endif
+#ifdef ENAGAL
             else if (!strncmp(buff,"GAUT",4)) { /* v.3.02 */
                 nav->utc_gal[0]=str2num(buff, 5,17);
                 nav->utc_gal[1]=str2num(buff,22,16);
                 nav->utc_gal[2]=str2num(buff,38, 7);
                 nav->utc_gal[3]=str2num(buff,45, 5);
             }
+#endif
+#ifdef ENAQZS
             else if (!strncmp(buff,"QZUT",4)) { /* v.3.02 */
                 nav->utc_qzs[0]=str2num(buff, 5,17);
                 nav->utc_qzs[1]=str2num(buff,22,16);
                 nav->utc_qzs[2]=str2num(buff,38, 7);
                 nav->utc_qzs[3]=str2num(buff,45, 5);
             }
+#endif
+#ifdef ENACMP
             else if (!strncmp(buff,"BDUT",4)) { /* v.3.02 */
                 nav->utc_cmp[0]=str2num(buff, 5,17);
                 nav->utc_cmp[1]=str2num(buff,22,16);
@@ -509,6 +524,7 @@ static void decode_navh(char *buff, nav_t *nav)
                 nav->utc_cmp[2]=str2num(buff,38, 7);
                 nav->utc_cmp[3]=str2num(buff,45, 5);
             }
+#endif
         }
     }
     else if (strstr(label,"LEAP SECONDS"        )) { /* opt */
@@ -1220,6 +1236,7 @@ static int add_eph(nav_t *nav, const eph_t *eph)
 }
 static int add_geph(nav_t *nav, const geph_t *geph)
 {
+#ifdef ENAGLO
     geph_t *nav_geph;
     
     if (nav->ngmax<=nav->ng) {
@@ -1233,6 +1250,9 @@ static int add_geph(nav_t *nav, const geph_t *geph)
     }
     nav->geph[nav->ng++]=*geph;
     return 1;
+#else
+    return 0;
+#endif
 }
 static int add_seph(nav_t *nav, const seph_t *seph)
 {
@@ -1276,7 +1296,11 @@ static int readrnxnav(FILE *fp, const char *opt, double ver, int sys,
             if (!stat) return 0;
         }
     }
-    return nav->n>0||nav->ng>0||nav->ns>0;
+    return nav->n>0
+#ifdef ENAGLO
+        || nav->ng>0
+#endif
+        || nav->ns>0;
 }
 /* read rinex clock ----------------------------------------------------------*/
 static int readrnxclk(FILE *fp, const char *opt, int index, nav_t *nav)
@@ -1574,12 +1598,16 @@ extern int init_rnxctr(rnxctr_t *rnx)
     
     rnx->obs.data=NULL;
     rnx->nav.eph =NULL;
+#ifdef ENAGLO
     rnx->nav.geph=NULL;
+#endif
     rnx->nav.seph=NULL;
     
     if (!(rnx->obs.data=(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS ))||
         !(rnx->nav.eph =(eph_t  *)malloc(sizeof(eph_t )*MAXSAT ))||
+#ifdef ENAGLO
         !(rnx->nav.geph=(geph_t *)malloc(sizeof(geph_t)*NSATGLO))||
+#endif
         !(rnx->nav.seph=(seph_t *)malloc(sizeof(seph_t)*NSATSBS))) {
         free_rnxctr(rnx);
         return 0;
@@ -1590,11 +1618,15 @@ extern int init_rnxctr(rnxctr_t *rnx)
     for (i=0;i<6;i++) for (j=0;j<MAXOBSTYPE;j++) rnx->tobs[i][j][0]='\0';
     rnx->obs.n=0;
     rnx->nav.n=MAXSAT;
+#ifdef ENAGLO
     rnx->nav.ng=NSATGLO;
+#endif
     rnx->nav.ns=NSATSBS;
     for (i=0;i<MAXOBS ;i++) rnx->obs.data[i]=data0;
     for (i=0;i<MAXSAT ;i++) rnx->nav.eph [i]=eph0;
+#ifdef ENAGLO
     for (i=0;i<NSATGLO;i++) rnx->nav.geph[i]=geph0;
+#endif
     for (i=0;i<NSATSBS;i++) rnx->nav.seph[i]=seph0;
     rnx->ephsat=0;
     rnx->opt[0]='\0';
@@ -1612,7 +1644,9 @@ extern void free_rnxctr(rnxctr_t *rnx)
     
     free(rnx->obs.data); rnx->obs.data=NULL; rnx->obs.n =0;
     free(rnx->nav.eph ); rnx->nav.eph =NULL; rnx->nav.n =0;
+#ifdef ENAGLO
     free(rnx->nav.geph); rnx->nav.geph=NULL; rnx->nav.ng=0;
+#endif
     free(rnx->nav.seph); rnx->nav.seph=NULL; rnx->nav.ns=0;
 }
 /* open rinex data -------------------------------------------------------------
@@ -1690,10 +1724,12 @@ extern int input_rnxctr(rnxctr_t *rnx, FILE *fp)
         return stat<0?-2:0;
     }
     if (type==1) {
+#ifdef ENAGLO
         sys=satsys(geph.sat,&prn);
         rnx->nav.geph[prn-1]=geph;
         rnx->time=geph.tof;
         rnx->ephsat=geph.sat;
+#endif
     }
     else if (type==2) {
         sys=satsys(seph.sat,&prn);
@@ -2093,19 +2129,23 @@ extern int outrnxnavh(FILE *fp, const rnxopt_t *opt, const nav_t *nav)
         }
         if (opt->navsys&SYS_GAL) {
             if (opt->outiono) {
+#ifdef ENAGAL
                 fprintf(fp,"GAL  %12.4E%12.4E%12.4E%12.4E%7s%-20s\n",
                         nav->ion_gal[0],nav->ion_gal[1],nav->ion_gal[2],0.0,"",
                         "IONOSPHERIC CORR");
+#endif
             }
         }
         if (opt->navsys&SYS_QZS) {
             if (opt->outiono) {
+#ifdef ENAQZS
                 fprintf(fp,"QZSA %12.4E%12.4E%12.4E%12.4E%7s%-20s\n",
                         nav->ion_qzs[0],nav->ion_qzs[1],nav->ion_qzs[2],
                         nav->ion_qzs[3],"","IONOSPHERIC CORR");
                 fprintf(fp,"QZSB %12.4E%12.4E%12.4E%12.4E%7s%-20s\n",
                         nav->ion_qzs[4],nav->ion_qzs[5],nav->ion_qzs[6],
                         nav->ion_qzs[7],"","IONOSPHERIC CORR");
+#endif
             }
         }
         if (opt->navsys&SYS_GPS) {
@@ -2117,23 +2157,29 @@ extern int outrnxnavh(FILE *fp, const rnxopt_t *opt, const nav_t *nav)
         }
         if (opt->navsys&SYS_GAL) {
             if (opt->outtime) {
+#ifdef ENAGAL
                 fprintf(fp,"GAUT %17.10E%16.9E%7.0f%5.0f %-5s %-2s %-20s\n",
                         nav->utc_gal[0],nav->utc_gal[1],nav->utc_gal[2],
                         nav->utc_gal[3],"","","TIME SYSTEM CORR");
+#endif
             }
         }
         if (opt->navsys&SYS_QZS) { /* ver.3.02 */
             if (opt->outtime) {
+#ifdef ENAQZS
                 fprintf(fp,"QZUT %17.10E%16.9E%7.0f%5.0f %-5s %-2s %-20s\n",
                         nav->utc_qzs[0],nav->utc_qzs[1],nav->utc_qzs[2],
                         nav->utc_qzs[3],"","","TIME SYSTEM CORR");
+#endif
             }
         }
         if (opt->navsys&SYS_CMP) { /* ver.3.02 */
             if (opt->outtime) {
+#ifdef ENACMP
                 fprintf(fp,"BDUT %17.10E%16.9E%7.0f%5.0f %-5s %-2s %-20s\n",
                         nav->utc_cmp[0],nav->utc_cmp[1],nav->utc_cmp[2],
                         nav->utc_cmp[3],"","","TIME SYSTEM CORR");
+#endif
             }
         }
     }

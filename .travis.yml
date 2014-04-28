@@ -1,4 +1,5 @@
 language: c
 
 script:
+  - (cd ./app/minimal_pntpos/gcc/ && make clean all)
   - (cd ./app/minimal_rtkpos/gcc/ && make clean all)

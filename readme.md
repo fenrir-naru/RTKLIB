@@ -26,13 +26,13 @@ produce or sell their own non-commercial or commercial products utilizing,
 linking or including minimal RTKLIB as long as they comply with the license.
 
           Copyright (c) 2007-2013, T. Takasu, 
-          All rights reserved for the original RTKLIB.
+          All rights for the original RTKLIB reserved.
 
 Also,
 
           Copyright (c) 2014-, M. Naruoka, 
-          All rights reserved for the differences 
-          between the minimal and the original RTKLIB.  
+          All rights for the differences 
+          between the minimal and the original RTKLIBs reserved.  
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:

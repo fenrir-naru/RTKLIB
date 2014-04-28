@@ -1,6 +1,5 @@
 # Minimal RTKLIB for embedded computing.
 ================
-
 [![Build Status](https://travis-ci.org/fenrir-naru/RTKLIB.svg?branch=spike)](https://travis-ci.org/fenrir-naru/RTKLIB)
 
 This software is originated from RTKLIB, which is An Open Source Program Package for GNSS Positioning written by T. Takasu, and modified by M. Naruoka to fit for embedded computing.
@@ -11,8 +10,8 @@ The major differences are the following:
 3. Runnable without system header such as providing time functions.
 4. Runnable with smaller memory.
 
-Please see [minimal_rtkpos](fenrir-naru/RTKLIB/tree/spike/app/minimal_rtkpos) for ppp-positioning, 
-and [minimal_pntpos](fenrir-naru/RTKLIB/tree/spike/app/minimal_pntpos) for single-positioning. 
+Please see [minimal_rtkpos](app/minimal_rtkpos) for ppp-positioning, 
+and [minimal_pntpos](app/minimal_pntpos) for single-positioning. 
 
 The license of this software follows one of RTKLIB, that is, so-called BSD 2-clause license.
 
@@ -26,12 +25,14 @@ additional an exclusive clauses. Users are permitted to develop,
 produce or sell their own non-commercial or commercial products utilizing, 
 linking or including minimal RTKLIB as long as they comply with the license.
 
-          Copyright (c) 2007-2013, T. Takasu, All rights reserved
-          for the original RTKLIB.
+          Copyright (c) 2007-2013, T. Takasu, 
+          All rights reserved for the original RTKLIB.
 
 Also,
-          Copyright (c) 2014-, M. Naruoka, All rights reserved
-          for the differences between the minimal and the original RTKLIB.  
+
+          Copyright (c) 2014-, M. Naruoka, 
+          All rights reserved for the differences 
+          between the minimal and the original RTKLIB.  
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:

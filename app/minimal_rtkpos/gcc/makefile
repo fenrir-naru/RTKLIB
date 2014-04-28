@@ -40,7 +40,7 @@ $(BUILD_DIR)/%.o :
 $(PACKAGE) : $(patsubst %,$(BUILD_DIR)/%,$(PACKAGE))
 
 $(BUILD_DIR)/$(PACKAGE) : $(patsubst %,$(BUILD_DIR)/%,$(OBJS))
-	$(CXX) $(LFLAGS) $(INCLUDES) -o $@ $(LIBS) $^;
+	$(CXX) $(LFLAGS) $(INCLUDES) -o $@ $^ $(LIBS);
 
 $(BUILD_DIR) :
 	mkdir $@

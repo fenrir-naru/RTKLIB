@@ -11,7 +11,7 @@ CFLAGS = $(CPPFLAGS) #-Wall -O3 -ansi -pedantic
 LFLAGS =  
 ORIG_SRC_DIR = ../../../src/
 INCLUDES = -I$(ORIG_SRC_DIR)
-LIBS = #-L
+LIBS = -lm #-L
 BUILD_DIR = build_GCC
 
 SRCS_ORIG = rtkcmn.c ephemeris.c pntpos.c sbas.c ionex.c preceph.c

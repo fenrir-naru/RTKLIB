@@ -2832,6 +2832,7 @@ extern void traceb  (int level, const unsigned char *p, int n) {}
 
 #endif /* TRACE */
 
+#ifndef WITHOUT_FILE
 /* execute command -------------------------------------------------------------
 * execute command line by operating system shell
 * args   : char   *cmd      I   command line
@@ -2862,7 +2863,6 @@ extern int execcmd(const char *cmd)
     return system(cmd);
 #endif
 }
-#ifndef WITHOUT_FILE
 /* expand file path ------------------------------------------------------------
 * expand file path with wild-card (*) in file
 * args   : char   *path     I   file path to expand (captal insensitive)

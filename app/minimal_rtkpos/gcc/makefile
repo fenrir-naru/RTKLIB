@@ -5,8 +5,8 @@ PACKAGE = minimal_rtkpos.exe
 BIN_PATH = /usr/bin:/usr/local/bin
 CXX = gcc
 CPPFLAGS = -DWITHOUT_FILE -DWITHOUT_THREAD -DWITHOUT_SYSTIME -DTRACE
-#-DENAGLO -DENAGAL -DENAQZS -DNFREQ=3
-#-mfpu=neon -mfloat-abi=softfp -ffast-math #for beaglebone
+#CPPFLAGS += -DENAGLO -DENAGAL -DENAQZS -DNFREQ=3
+#CPPFLAGS += -mfpu=neon -mfloat-abi=softfp -ffast-math #for beaglebone
 CFLAGS = $(CPPFLAGS) #-Wall -O3 -ansi -pedantic
 LFLAGS =  
 ORIG_SRC_DIR = ../../../src/

@@ -60,12 +60,13 @@ unsigned int tickget(){
 #undef free
 #ifdef TRACE
 void *malloc_custom(size_t size, const char *file, const int line){
-  fprintf(stderr, "malloc: ll.%d @ %s: %d\n", line, file, size);
+  void *res = malloc(size);
+  fprintf(stderr, "malloc: ll.%d @ %s: 0x%x (%d bytes)\n", line, file, res, size);
   fflush(stderr);
-  return malloc(size);
+  return res;
 }
 void free_custom(void *ptr, const char *file, const int line){
-  fprintf(stderr, "free: ll.%d @ %s\n", line, file);
+  fprintf(stderr, "free: ll.%d @ %s: 0x%x\n", line, file, ptr);
   fflush(stderr);
   free(ptr);
 }

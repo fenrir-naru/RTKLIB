@@ -49,6 +49,17 @@
 extern "C" {
 #endif
 
+#ifdef CUSTOM_ALLOC
+#define NOCALLOC 1
+#ifdef TRACE
+#define malloc(x) malloc_custom(x,__FILE__,__LINE__)
+#define free(x) free_custom(x,__FILE__,__LINE__)
+#else
+#define malloc(x) malloc_custom(x)
+#define free(x) free_custom(x)
+#endif
+#endif
+
 /* constants -----------------------------------------------------------------*/
 
 #define VER_RTKLIB  "2.4.2"             /* library version */

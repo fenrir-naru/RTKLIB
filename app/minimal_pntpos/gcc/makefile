@@ -4,7 +4,8 @@ PACKAGE = minimal_pntpos.exe
 
 BIN_PATH = /usr/bin:/usr/local/bin
 CXX = gcc
-CPPFLAGS = -DWITHOUT_FILE -DWITHOUT_THREAD -DWITHOUT_SYSTIME -DTRACE
+CPPFLAGS = -DWITHOUT_FILE -DWITHOUT_THREAD -DWITHOUT_SYSTIME -DTRACE 
+#CPPFLAGS += -DCUSTOM_ALLOC
 #CPPFLAGS += -DENAGLO -DENAGAL -DENAQZS -DNFREQ=3
 #CPPFLAGS += -mfpu=neon -mfloat-abi=softfp -ffast-math #for beaglebone
 CFLAGS = $(CPPFLAGS) #-Wall -O3 -ansi -pedantic

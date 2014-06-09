@@ -55,6 +55,27 @@ unsigned int tickget(){
 }
 #endif
 
+#ifdef CUSTOM_ALLOC
+#undef malloc
+#undef free
+#ifdef TRACE
+void *malloc_custom(size_t size, const char *file, const int line){
+  fprintf(stderr, "malloc: ll.%d @ %s: %d\n", line, file, size);
+  fflush(stderr);
+  return malloc(size);
+}
+void free_custom(void *ptr, const char *file, const int line){
+  fprintf(stderr, "free: ll.%d @ %s\n", line, file);
+  fflush(stderr);
+  free(ptr);
+}
+#else
+void *malloc_custom(size_t size){return malloc(size);}
+void free_custom(void *ptr){free(ptr);}
+#endif
+
+#endif
+
 int main(){
 
   tracelevel(3); //0xF);

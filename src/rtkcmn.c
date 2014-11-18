@@ -1955,6 +1955,7 @@ extern void eci2ecef(gtime_t tutc, const double *erpv, double *U, double *gmst)
     trace(5,"W=\n"); tracemat(5,W,3,3,15,12);
     trace(5,"U=\n"); tracemat(5,U,3,3,15,12);
 }
+#ifndef WITHOUT_FILE
 /* decode antenna parameter field --------------------------------------------*/
 static int decodef(char *p, int n, double *v)
 {
@@ -1982,7 +1983,6 @@ static void addpcv(const pcv_t *pcv, pcvs_t *pcvs)
     }
     pcvs->pcv[pcvs->n++]=*pcv;
 }
-#ifndef WITHOUT_FILE
 /* read ngs antenna parameter file -------------------------------------------*/
 static int readngspcv(const char *file, pcvs_t *pcvs)
 {
@@ -3164,14 +3164,15 @@ extern int reppaths(const char *path, char *rpath[], int nmax, gtime_t ts,
 *-----------------------------------------------------------------------------*/
 extern double satwavelen(int sat, int frq, const nav_t *nav)
 {
-    const double freq_glo[]={FREQ1_GLO,FREQ2_GLO,FREQ3_GLO};
-    const double dfrq_glo[]={DFRQ1_GLO,DFRQ2_GLO,0.0};
-    int i,sys=satsys(sat,NULL);
+    int sys=satsys(sat,NULL);
     
     switch(sys){
 #ifdef ENAGLO
         case SYS_GLO: {
+            const double freq_glo[]={FREQ1_GLO,FREQ2_GLO,FREQ3_GLO};
+            const double dfrq_glo[]={DFRQ1_GLO,DFRQ2_GLO,0.0};
             if (0<=frq&&frq<=2) {
+                int i;
                 for (i=0;i<nav->ng;i++) {
                     if (nav->geph[i].sat!=sat) continue;
                     return CLIGHT/(freq_glo[frq]+dfrq_glo[frq]*nav->geph[i].frq);

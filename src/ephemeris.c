@@ -446,7 +446,6 @@ static int ephclk(gtime_t time, gtime_t teph, int sat, const nav_t *nav,
                   double *dts)
 {
     eph_t  *eph;
-    geph_t *geph;
     seph_t *seph;
     int sys;
     
@@ -460,6 +459,7 @@ static int ephclk(gtime_t time, gtime_t teph, int sat, const nav_t *nav,
     }
 #ifdef ENAGLO
     else if (sys==SYS_GLO) {
+        geph_t *geph;
         if (!(geph=selgeph(teph,sat,-1,nav))) return 0;
         *dts=geph2clk(time,geph);
     }
@@ -477,7 +477,6 @@ static int ephpos(gtime_t time, gtime_t teph, int sat, const nav_t *nav,
                   int iode, double *rs, double *dts, double *var, int *svh)
 {
     eph_t  *eph;
-    geph_t *geph;
     seph_t *seph;
     double rst[3],dtst[1],tt=1E-3;
     int i,sys;
@@ -498,6 +497,7 @@ static int ephpos(gtime_t time, gtime_t teph, int sat, const nav_t *nav,
     }
 #ifdef ENAGLO
     else if (sys==SYS_GLO) {
+        geph_t *geph;
         if (!(geph=selgeph(teph,sat,iode,nav))) return 0;
         geph2pos(time,geph,rs,dts,var);
         time=timeadd(time,tt);

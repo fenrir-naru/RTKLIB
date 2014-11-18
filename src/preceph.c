@@ -50,6 +50,7 @@ static const char rcsid[]="$Id:$";
 #define EXTERR_CLK  1E-3            /* extrapolation error for clock (m/s) */
 #define EXTERR_EPH  5E-7            /* extrapolation error for ephem (m/s^2) */
 
+#ifndef WITHOUT_FILE
 /* satellite code to satellite system ----------------------------------------*/
 static int code2sys(char code)
 {
@@ -61,7 +62,6 @@ static int code2sys(char code)
     if (code=='L') return SYS_LEO; /* extension to sp3-c */
     return SYS_NONE;
 }
-#ifndef WITHOUT_FILE
 /* read sp3 header -----------------------------------------------------------*/
 static int readsp3h(FILE *fp, gtime_t *time, char *type, int *sats,
                     double *bfact, char *tsys)
@@ -98,7 +98,6 @@ static int readsp3h(FILE *fp, gtime_t *time, char *type, int *sats,
     }
     return ns;
 }
-#endif /* #ifndef WITHOUT_FILE */
 /* add precise ephemeris -----------------------------------------------------*/
 static int addpeph(nav_t *nav, peph_t *peph)
 {
@@ -116,7 +115,6 @@ static int addpeph(nav_t *nav, peph_t *peph)
     nav->peph[nav->ne++]=*peph;
     return 1;
 }
-#ifndef WITHOUT_FILE
 /* read sp3 body -------------------------------------------------------------*/
 static void readsp3b(FILE *fp, char type, int *sats, int ns, double *bfact,
                      char *tsys, int index, int opt, nav_t *nav)
@@ -203,7 +201,6 @@ static void readsp3b(FILE *fp, char type, int *sats, int ns, double *bfact,
         }
     }
 }
-#endif /* #ifndef WITHOUT_FILE */
 /* compare precise ephemeris -------------------------------------------------*/
 static int cmppeph(const void *p1, const void *p2)
 {
@@ -240,7 +237,6 @@ static void combpeph(nav_t *nav, int opt)
     
     trace(4,"combpeph: ne=%d\n",nav->ne);
 }
-#ifndef WITHOUT_FILE
 /* read sp3 precise ephemeris file ---------------------------------------------
 * read sp3 precise ephemeris/clock files and set them to navigation data
 * args   : char   *file       I   sp3-c precise ephemeris file

@@ -25,6 +25,7 @@ static const char rcsid[]="$Id:$";
 #define MIN_EL      0.0         /* min elevation angle (rad) */
 #define MIN_HGT     -1000.0     /* min user height (m) */
 
+#ifndef WITHOUT_FILE
 /* get index -----------------------------------------------------------------*/
 static int getindex(double value, const double *range)
 {
@@ -38,6 +39,7 @@ static int nitem(const double *range)
 {
     return getindex(range[1],range)+1;
 }
+#endif /* #ifndef WITHOUT_FILE */
 /* data index (i:lat,j:lon,k:hgt) --------------------------------------------*/
 static int dataindex(int i, int j, int k, const int *ndata)
 {

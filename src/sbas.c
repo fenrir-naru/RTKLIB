@@ -91,12 +91,14 @@ const sbsigpband_t igpband2[2][5]={ /* band 9-10 */
     {{- 60,x5,  1, 72},{- 65,x6, 73,108},{- 70,x6,109,144},{- 75,x6,145,180},
      {- 85,x8,181,192}}
 };
+#ifndef WITHOUT_FILE
 /* extract field from line ---------------------------------------------------*/
 static char *getfield(char *p, int pos)
 {
     for (pos--;pos>0;pos--,p++) if (!(p=strchr(p,','))) return NULL;
     return p;
 }
+#endif /* WITHOUT_FILE */
 /* variance of fast correction (udre=UDRE+1) ---------------------------------*/
 static double varfcorr(int udre)
 {
@@ -520,7 +522,6 @@ static void readmsgs(const char *file, int sel, gtime_t ts, gtime_t te,
     }
     fclose(fp);
 }
-#endif /* #ifndef WITHOUT_FILE */
 /* compare sbas messages -----------------------------------------------------*/
 static int cmpmsgs(const void *p1, const void *p2)
 {
@@ -528,7 +529,6 @@ static int cmpmsgs(const void *p1, const void *p2)
     return q1->week!=q2->week?q1->week-q2->week:
            (q1->tow<q2->tow?-1:(q1->tow>q2->tow?1:q1->prn-q2->prn));
 }
-#ifndef WITHOUT_FILE
 /* read sbas message file ------------------------------------------------------
 * read sbas message file
 * args   : char     *file   I   sbas message file (wind-card * is expanded)

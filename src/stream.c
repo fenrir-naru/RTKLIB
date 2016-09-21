@@ -51,6 +51,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/select.h>
 #define __USE_MISC
 #include <errno.h>
 #include <termios.h>

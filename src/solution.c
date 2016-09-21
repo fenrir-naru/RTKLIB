@@ -45,14 +45,6 @@
 
 static const char rcsid[]="$Id: solution.c,v 1.1 2008/07/17 21:48:06 ttaka Exp $";
 
-const solopt_t solopt_default={ /* defaults solution output options */
-    SOLF_LLH,TIMES_GPST,1,3,    /* posf,times,timef,timeu */
-    0,1,0,0,0,0,                /* degf,outhead,outopt,datum,height,geoid */
-    0,0,0,                      /* solstatic,sstat,trace */
-    {0.0,0.0},                  /* nmeaintv */
-    " ",""                      /* separator/program name */
-};
-
 /* constants and macros ------------------------------------------------------*/
 
 #define SQR(x)     ((x)<0.0?-(x)*(x):(x)*(x))

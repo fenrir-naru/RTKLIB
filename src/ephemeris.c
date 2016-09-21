@@ -691,8 +691,10 @@ extern int satpos(gtime_t time, gtime_t teph, int sat, int ephopt,
         case EPHOPT_SSRCOM: return satpos_ssr (time,teph,sat,nav, 1,rs,dts,var,svh);
         case EPHOPT_PREC  :
             if (!peph2pos(time,sat,nav,1,rs,dts,var)) break; else return 1;
+#ifdef ENAQZS
         case EPHOPT_LEX   :
             if (!lexeph2pos(time,sat,nav,rs,dts,var)) break; else return 1;
+#endif
     }
     *svh=-1;
     return 0;

@@ -85,8 +85,10 @@ static int decode_lexhealth(const unsigned char *buff, int i, gtime_t tof,
         else     sat=satno(SYS_GPS,j-2);
         if (!sat) continue;
         
+#ifdef EXTLEX
         nav->lexeph[sat-1].tof=tof;
         nav->lexeph[sat-1].health=health;
+#endif
         
         trace(4,"sat=%2d health=%d\n",sat,health);
     }
@@ -133,11 +135,13 @@ static int decode_lexeph(const unsigned char *buff, int i, gtime_t toe,
     }
     eph.toe=toe;
     eph.sat=sat;
+#ifdef EXTLEX
     tof   =nav->lexeph[sat-1].tof;
     health=nav->lexeph[sat-1].health;
     nav->lexeph[sat-1]=eph;
     nav->lexeph[sat-1].tof   =tof;
     nav->lexeph[sat-1].health=health;
+#endif
     
     trace(4,"sat=%2d toe=%s pos=%.3f %.3f %.3f vel=%.5f %.5f %.5f\n",
           sat,time_str(toe,0),eph.pos[0],eph.pos[1],eph.pos[2],
@@ -174,7 +178,9 @@ static int decode_lexion(const unsigned char *buff, int i, gtime_t tof,
     ion.coef[0][1]=getbits(buff,i,22)*1E-2; i+=22;
     ion.coef[1][1]=getbits(buff,i,22)*1E-2; i+=22;
     ion.coef[2][1]=getbits(buff,i,22)*1E-1; i+=22;
+#ifdef EXTLEX
     nav->lexion=ion;
+#endif
     
     trace(4,"t0=%s tspan=%.0f pos0=%.1f %.1f coef=%.3f %.3f %.3f %.3f %.3f %.3f\n",
           time_str(ion.t0,0),ion.tspan,ion.pos0[0]*R2D,ion.pos0[1]*R2D,
@@ -552,6 +558,9 @@ extern int lexeph2pos(gtime_t time, int sat, const nav_t *nav, double *rs,
     
     if (!sat) return 0;
     
+#ifndef EXTLEX
+    return 0;
+#else
     eph=nav->lexeph+sat-1;
     
     if (eph->sat!=sat||eph->toe.time==0) {
@@ -582,6 +591,7 @@ extern int lexeph2pos(gtime_t time, int sat, const nav_t *nav, double *rs,
     
     *var=vareph(eph->ura);
     return 1;
+#endif
 }
 /* lex ionosphere correction --------------------------------------------------
 * ionosphere correction by lex correction
@@ -614,7 +624,10 @@ extern int lexioncorr(gtime_t time, const nav_t *nav, const double *pos,
     *delay=*var=0.0;
     
     if (pos[2]<-100.0||azel[1]<=0.0) return 1;
-    
+
+#ifndef EXTLEX
+    return 0;
+#else
     tt=timediff(time,nav->lexion.t0);
     
     /* check time span */
@@ -667,4 +680,5 @@ extern int lexioncorr(gtime_t time, const nav_t *nav, const double *pos,
     trace(4,"lexioncorr: time=%s delay=%.3f\n",time_str(time,0),*delay);
     
     return 1;
+#endif
 }

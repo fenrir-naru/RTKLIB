@@ -155,10 +155,12 @@ extern int ionocorr(gtime_t time, const nav_t *nav, int sat, const double *pos,
         return 1;
     }
 #endif
+#ifdef ENAQZS
     /* lex ionosphere model */
     if (ionoopt==IONOOPT_LEX) {
         return lexioncorr(time,nav,pos,azel,ion,var);
     }
+#endif
     *ion=0.0;
     *var=ionoopt==IONOOPT_OFF?SQR(ERR_ION):0.0;
     return 1;

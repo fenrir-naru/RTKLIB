@@ -1,6 +1,7 @@
 # Minimal RTKLIB for embedded computing.
 ================
 [![Build Status](https://travis-ci.org/fenrir-naru/RTKLIB.svg?branch=spike)](https://travis-ci.org/fenrir-naru/RTKLIB)
+[![Build status](https://ci.appveyor.com/api/projects/status/nhxrs04bs6q60cui?svg=true)](https://ci.appveyor.com/project/fenrir-naru/rtklib)
 
 This software is originated from RTKLIB, which is An Open Source Program Package for GNSS Positioning written by T. Takasu, and modified by M. Naruoka to fit for embedded computing.
 The major differences are the following:

@@ -57,27 +57,32 @@ unsigned int tickget(){
 
 #ifdef CUSTOM_ALLOC
 #undef malloc
+#undef realloc
 #undef free
 #ifdef TRACE
 void *malloc_custom(size_t size, const char *file, const int line){
   void *res = malloc(size);
-  fprintf(stderr, "malloc: ll.%d @ %s: 0x%x (%d bytes)\n", line, file, res, size);
-  fflush(stderr);
+  trace(3, "malloc: ll.%d @ %s: 0x%x (%d bytes)\n", line, file, res, size);
+  return res;
+}
+void *realloc_custom(void *ptr, size_t size, const char *file, const int line){
+  void *res = realloc(ptr, size);
+  trace(3, "realloc: ll.%d @ %s: 0x%x (%d bytes)\n", line, file, res, size);
   return res;
 }
 void free_custom(void *ptr, const char *file, const int line){
-  fprintf(stderr, "free: ll.%d @ %s: 0x%x\n", line, file, ptr);
-  fflush(stderr);
+  trace(3, "free: ll.%d @ %s: 0x%x\n", line, file, ptr);
   free(ptr);
 }
 #else
 void *malloc_custom(size_t size){return malloc(size);}
+void *realloc_custom(void *ptr, size_t size){return realloc(ptr, size);}
 void free_custom(void *ptr){free(ptr);}
 #endif
 
 #endif
 
-int main(){
+int main(int argc, char *argv){
 
   tracelevel(3); //0xF);
 

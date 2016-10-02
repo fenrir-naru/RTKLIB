@@ -52,11 +52,19 @@ extern "C" {
 #ifdef CUSTOM_ALLOC
 #define NOCALLOC 1
 #ifdef TRACE
-#define malloc(x) malloc_custom(x,__FILE__,__LINE__)
-#define free(x) free_custom(x,__FILE__,__LINE__)
+#define malloc(size) malloc_custom(size,__FILE__,__LINE__)
+#define realloc(ptr,size) realloc_custom(ptr,size,__FILE__,__LINE__)
+#define free(ptr) free_custom(ptr,__FILE__,__LINE__)
+void *malloc_custom(size_t size, const char *file, const int line);
+void *realloc_custom(void *ptr, size_t size, const char *file, const int line);
+void free_custom(void *ptr, const char *file, const int line);
 #else
-#define malloc(x) malloc_custom(x)
-#define free(x) free_custom(x)
+#define malloc(size) malloc_custom(size)
+#define realloc(ptr,size) realloc_custom(ptr,size)
+#define free(ptr) free_custom(ptr)
+void *malloc_custom(size_t size);
+void *realloc_custom(void *ptr, size_t size);
+void free_custom(void *ptr);
 #endif
 #endif
 

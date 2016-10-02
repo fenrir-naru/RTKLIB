@@ -1941,6 +1941,7 @@ extern int outrnxobsh(FILE *fp, const rnxopt_t *opt, const nav_t *nav)
             fprintf(fp,"%c %-58s%-20s\n",syscodes[i],"","SYS / PHASE SHIFT");
         }
     }
+#ifdef ENAGLO
     if (opt->rnxver>=3.02) { /* ver.3.02 */
         for (i=n=0;i<MAXPRNGLO;i++) {
             if (nav->glo_fcn[i]>=1) prn[n++]=i+1;
@@ -1962,6 +1963,7 @@ extern int outrnxobsh(FILE *fp, const rnxopt_t *opt, const nav_t *nav)
         for (i=0;i<4;i++) fprintf(fp," %3s %8.3f",glo_codes[i],0.0);
         fprintf(fp,"%8s%-20s\n","","GLONASS COD/PHS/BIS");
     }
+#endif
     return fprintf(fp,"%-60.60s%-20s\n","","END OF HEADER")!=EOF;
 }
 /* output obs data field -----------------------------------------------------*/

@@ -72,15 +72,8 @@ int main(){
   ///< @see init_raw() of rcvraw.c
   memset(&nav, 0, sizeof(nav_t));
 
-  eph_t eph_buf[MAXSAT * 2];
-  nav.eph = eph_buf;
-  nav.n = 0;
-  nav.nmax = MAXSAT * 2;
-  
-  seph_t seph_buf[NSATSBS * 2];
-  nav.seph = seph_buf;
-  nav.ns = 0;
-  nav.nsmax = NSATSBS * 2;
+  obs_t obs;
+  memset(&obs, 0, sizeof(obs_t));
 
   {
     const double lam_gnss[] = {
@@ -107,13 +100,6 @@ int main(){
 
   rtkinit(&rtk, &opt);
 
-  obsd_t obs_data[MAXOBS * 2];
-  memset(obs_data, 0, sizeof(obs_data));
-  obs_t obs;
-  obs.n = 0;
-  obs.nmax = sizeof(obs_data) / sizeof(obs_data[0]);
-  obs.data = obs_data;
-
 #ifdef USE_RINEX_INPUT
   char *t_str[] = {
       "05  4  2  2  0  0.0", "05  4  2  2  0 29.0",
@@ -134,6 +120,22 @@ int main(){
   }
   sortobs(&obs);
 #else
+  eph_t eph_buf[MAXSAT * 2];
+  nav.eph = eph_buf;
+  nav.n = 0;
+  nav.nmax = MAXSAT * 2;
+
+  seph_t seph_buf[NSATSBS * 2];
+  nav.seph = seph_buf;
+  nav.ns = 0;
+  nav.nsmax = NSATSBS * 2;
+
+  obsd_t obs_data[MAXOBS * 2];
+  memset(obs_data, 0, sizeof(obs_data));
+  obs.n = 0;
+  obs.nmax = sizeof(obs_data) / sizeof(obs_data[0]);
+  obs.data = obs_data;
+
 	// RINEX NAV Header manual-extraction
   {
     double ion_gps[] = {

@@ -82,7 +82,7 @@ void free_custom(void *ptr){free(ptr);}
 
 #endif
 
-int main(int argc, char *argv){
+int main(int argc, char *argv[]){
 
   tracelevel(3); //0xF);
 
@@ -115,23 +115,73 @@ int main(int argc, char *argv){
   opt.nf = 2;
 
 #ifdef USE_RINEX_INPUT
-  char *t_str[] = {
-      "05  4  2  2  0  0.0", "05  4  2  2  0 29.0",
-      "05  4  2  0  0  0.0000000", "05  4  2  0  0 29.0000000",};
-  gtime_t t[sizeof(t_str) / sizeof(t_str[0])];
-  {
+  if(argc <= 1){
+    char *t_str[] = {
+        "05  4  2  2  0  0.0", "05  4  2  2  0 29.0",
+        "05  4  2  0  0  0.0000000", "05  4  2  0  0 29.0000000",};
+    gtime_t t[sizeof(t_str) / sizeof(t_str[0])];
+    {
+      int i;
+      for(i = 0; i < sizeof(t) / sizeof(t[0]); i++){
+        str2time(t_str[i], 0, strlen(t_str[i]), &t[i]);
+      }
+    }
+    char relpath_nav[][0x10] = {"..", "..", "test", "data", "rinex", "07590920.05n"};
+    char relpath_obs[][0x10] = {"..", "..", "test", "data", "rinex", "07590920.05o"};
+    const char path_separator =
+#ifdef _WIN32
+        '\\';
+#else
+        '/';
+#endif
+    char path_nav[0x200] = {0}, path_obs[0x200] = {0};
+    const char *this_file = __FILE__;
+    char *ptr;
+    if(ptr = strrchr(this_file, path_separator)){
+      memcpy(path_nav, this_file, ptr - this_file + 1);
+      memcpy(path_obs, this_file, ptr - this_file + 1);
+    }
+
     int i;
-    for(i = 0; i < sizeof(t) / sizeof(t[0]); i++){
-      str2time(t_str[i], 0, strlen(t_str[i]), &t[i]);
+
+    ptr = &path_nav[strlen(path_nav)];
+    for(i = 0; i < sizeof(relpath_nav) / sizeof(relpath_nav[0]); i++){
+      int len = strlen(relpath_nav[i]);
+      memcpy(ptr, relpath_nav[i], len);
+      if(i < (sizeof(relpath_nav) / sizeof(relpath_nav[0]) - 1)){
+        *(ptr += len) = path_separator;
+        ptr++;
+      }
+    }
+
+    ptr = &path_obs[strlen(path_obs)];
+    for(i = 0; i < sizeof(relpath_obs) / sizeof(relpath_obs[0]); i++){
+      int len = strlen(relpath_obs[i]);
+      memcpy(ptr, relpath_obs[i], len);
+      if(i < (sizeof(relpath_obs) / sizeof(relpath_obs[0]) - 1)){
+        *(ptr += len) = path_separator;
+        ptr++;
+      }
+    }
+
+    if(readrnxt(path_nav, 1, t[0], t[1], 0.0, "", NULL, &nav, NULL) == 0){
+      exit(-1);
+    }
+
+    if(readrnxt(path_obs, 1, t[2], t[3], 0.0, "", &obs, NULL, NULL) == 0){
+      exit(-1);
+    }
+  }else if(argc >= 3){
+    gtime_t t_null = {0};
+    if(readrnxt(argv[1], 1, t_null, t_null, 0.0, "", NULL, &nav, NULL) == 0){
+      exit(-1);
+    }
+
+    if(readrnxt(argv[2], 1, t_null, t_null, 0.0, "", &obs, NULL, NULL) == 0){
+      exit(-1);
     }
   }
-  if(readrnxt("../../../../test/data/rinex/07590920.05n", 1, t[0], t[1], 0.0, "", NULL, &nav, NULL) == 0){
-    exit(-1);
-  }
   uniqnav(&nav);
-  if(readrnxt("../../../../test/data/rinex/07590920.05o", 1, t[2], t[3], 0.0, "", &obs, NULL, NULL) == 0){
-    exit(-1);
-  }
   sortobs(&obs);
 #else
   eph_t eph_buf[MAXSAT * 2];
